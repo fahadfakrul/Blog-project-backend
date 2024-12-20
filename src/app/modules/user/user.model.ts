@@ -17,7 +17,7 @@ const userSchema = new Schema<TUser>(
       unique: true,
     },
     password: { type: String, required: true },
-    role: { type: String, enum: ['admin', 'user'] },
+    role: { type: String, enum: ['admin', 'user'], default: 'user' },
     isBlocked: { type: Boolean, default: false },
   },
   { timestamps: true }
