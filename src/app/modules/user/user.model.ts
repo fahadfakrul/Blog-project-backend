@@ -7,12 +7,6 @@ const userSchema = new Schema<TUser>(
     email: {
       type: String,
       required: [true, 'Please provide your email'],
-      validate: {
-        validator: function (value: string) {
-          return /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(value);
-        },
-        message: '{VALUE} is not a valid email',
-      },
       immutable: true,
       unique: true,
     },

@@ -1,5 +1,6 @@
-import cors from "cors";
-import express, { Application, Request, Response } from "express";
+import cors from 'cors';
+import express, { Application, Request, Response } from 'express';
+import { UserRoutes } from './app/modules/user/user.route';
 const app: Application = express();
 const port = 3000;
 
@@ -7,8 +8,10 @@ const port = 3000;
 app.use(express.json());
 app.use(cors());
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World!");
+//application routes
+app.use('/api/auth', UserRoutes);
+app.get('/', (req: Request, res: Response) => {
+  res.send('Server is running!');
 });
 
 export default app;
