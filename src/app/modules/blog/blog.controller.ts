@@ -5,7 +5,12 @@ import { BlogServices } from './blog.service';
 
 const createBlog = catchAsync(async (req, res) => {
   const blogDetails = req.body;
-  const result = await BlogServices.createBlogIntoDB(blogDetails);
+  const { _id: userId } = req.user;
+
+  const result = await BlogServices.createBlogIntoDB({
+    ...blogDetails,
+    author: userId,
+  });
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,

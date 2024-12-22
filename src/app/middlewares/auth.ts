@@ -21,7 +21,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
           throw new Error('You are not authorized to access');
         }
         const role = (decoded as JwtPayload).role;
-        if (requiredRoles && requiredRoles.includes(role)) {
+        if (requiredRoles && !requiredRoles.includes(role)) {
           throw new Error('You are not authorized to access this resource');
         }
         req.user = decoded as JwtPayload;
