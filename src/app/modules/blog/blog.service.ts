@@ -25,7 +25,13 @@ const updateBlogInDB = async (id: string, userId: string, payload: TBlog) => {
   return updatedBlog;
 };
 
+const getAllBlogsFromDB = async () => {
+  const blogs = await Blog.find();
+  return blogs;
+};
+
 export const BlogServices = {
   createBlogIntoDB,
   updateBlogInDB,
+  getAllBlogsFromDB,
 };

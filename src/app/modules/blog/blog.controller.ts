@@ -32,7 +32,28 @@ const updateBlog = catchAsync(async (req, res) => {
   });
 });
 
+const getAllBlogsFromDB = catchAsync(async (req, res) => {
+  const result = await BlogServices.getAllBlogsFromDB();
+
+  if (result.length === 0) {
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: 'No blogs created yet',
+      data: result,
+    });
+  } else {
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: 'Blogs fetched successfully',
+      data: result,
+    });
+  }
+});
+
 export const BlogControllers = {
   createBlog,
   updateBlog,
+  getAllBlogsFromDB,
 };

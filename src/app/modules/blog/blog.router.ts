@@ -21,5 +21,6 @@ router.patch(
   validateRequest(blogValidationSchema),
   BlogControllers.updateBlog
 );
+router.get('/', BlogControllers.getAllBlogsFromDB);
 
 export const BlogRoutes = router;
