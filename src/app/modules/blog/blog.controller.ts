@@ -19,6 +19,20 @@ const createBlog = catchAsync(async (req, res) => {
   });
 });
 
+const updateBlog = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const blogDetails = req.body;
+  const { _id: userId } = req.user;
+  const result = await BlogServices.updateBlogInDB(id, userId, blogDetails);
+  sendResponse(res, {
+    success: true,
+    message: 'Blog updated successfully',
+    statusCode: 200,
+    data: result,
+  });
+});
+
 export const BlogControllers = {
   createBlog,
+  updateBlog,
 };
