@@ -33,8 +33,8 @@ const getAllBlogsFromDB = async () => {
   return blogs;
 };
 
-const deleteBlogFromDB = async (id: string) => {
-  const blog = await Blog.findOne({ _id: id });
+const deleteBlogFromDB = async (id: string, userId: string) => {
+  const blog = await Blog.findOne({ _id: id, author: userId });
   if (!blog) {
     throw new AppError(httpStatus.NOT_FOUND, 'Blog not found');
   }
