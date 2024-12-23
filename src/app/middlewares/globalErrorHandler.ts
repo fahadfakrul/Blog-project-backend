@@ -1,16 +1,16 @@
-import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
+import { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
+import { TErrorSources } from '../interface/error';
+import config from '../config';
+import handleZodError from '../errors/handleZodError';
+import handleValidationError from '../errors/handleValidationError';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // default error values
   let statusCode = err.statusCode || 500;
   let message = err.message || 'internal server error';
 
-  type TErrorSource = {
-    path: string | number;
-    message: string;
-  }[];
-  let errorSources: TErrorSource = [
+  let errorSources: TErrorSources = [
     {
       path: '',
       message: 'Something went wrong',
@@ -18,15 +18,21 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   ];
 
   if (err instanceof ZodError) {
-    statusCode = 200;
-    message = 'Validation error';
+    const simplifiedError = handleZodError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError?.errorSources;
+  } else if (err?.name === 'ValidationError') {
+    const simplifiedError = handleValidationError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError?.errorSources;
   }
   res.status(statusCode).json({
-    statusCode,
     success: false,
     message,
     errorSources,
-    error: err,
+    stack: config.NODE_ENV === 'development' ? err?.stack : null,
   });
 };
 
