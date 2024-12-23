@@ -3,12 +3,17 @@ import catchAsync from '../utils/catchAsync';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../config';
 import { TUserRole } from '../modules/user/user.interface';
+import AppError from '../errors/AppError';
+import httpStatus from 'http-status';
 
 const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
     if (!token) {
-      throw new Error('Authentication token is required');
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        'Authentication token is required'
+      );
     }
 
     //check is the token is valid
@@ -18,11 +23,17 @@ const auth = (...requiredRoles: TUserRole[]) => {
       function (err, decoded) {
         // err
         if (err) {
-          throw new Error('You are not authorized to access');
+          throw new AppError(
+            httpStatus.FORBIDDEN,
+            'You are not authorized to access'
+          );
         }
         const role = (decoded as JwtPayload).role;
         if (requiredRoles && !requiredRoles.includes(role)) {
-          throw new Error('You are not authorized to access this resource');
+          throw new AppError(
+            httpStatus.FORBIDDEN,
+            'You are not authorized to access this resource'
+          );
         }
         req.user = decoded as JwtPayload;
         next();

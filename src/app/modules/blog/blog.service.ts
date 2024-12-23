@@ -1,3 +1,5 @@
+import httpStatus from 'http-status';
+import AppError from '../../errors/AppError';
 import { TBlog } from './blog.interface';
 import { Blog } from './blog.model';
 
@@ -10,14 +12,15 @@ const createBlogIntoDB = async (blogData: TBlog) => {
   return populatedBlog;
 };
 const updateBlogInDB = async (id: string, userId: string, payload: TBlog) => {
-  // Find the blog by its ID and check if the user is the author
   const blog = await Blog.findOne({ _id: id, author: userId });
 
   if (!blog) {
-    throw new Error('Unauthorized to update this blog'); // You can throw an error or handle it as needed
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      'Unauthorized to update this blog'
+    );
   }
 
-  // If the blog exists and the user is the author, update the blog
   const updatedBlog = await Blog.findByIdAndUpdate(id, payload, {
     new: true,
     runValidators: true,
@@ -30,8 +33,19 @@ const getAllBlogsFromDB = async () => {
   return blogs;
 };
 
+const deleteBlogFromDB = async (id: string) => {
+  const blog = await Blog.findOne({ _id: id });
+  if (!blog) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Blog not found');
+  }
+
+  await Blog.findByIdAndDelete(id);
+  return { message: 'Blog deleted successfully' };
+};
+
 export const BlogServices = {
   createBlogIntoDB,
   updateBlogInDB,
   getAllBlogsFromDB,
+  deleteBlogFromDB,
 };

@@ -18,6 +18,10 @@ const moduleRoutes = [
     path: '/blogs',
     route: BlogRoutes,
   },
+  {
+    path: '/admin',
+    route: BlogRoutes,
+  },
 ];
 
 moduleRoutes.forEach((route) => {
