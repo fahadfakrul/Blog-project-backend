@@ -33,7 +33,7 @@ const updateBlog = catchAsync(async (req, res) => {
 });
 
 const getAllBlogsFromDB = catchAsync(async (req, res) => {
-  const result = await BlogServices.getAllBlogsFromDB();
+  const result = await BlogServices.getAllBlogsFromDB(req.query);
 
   if (result.length === 0) {
     sendResponse(res, {

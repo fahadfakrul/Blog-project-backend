@@ -2,6 +2,8 @@ import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { TBlog } from './blog.interface';
 import { Blog } from './blog.model';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { blogSearchableFields } from './blog.constant';
 
 const createBlogIntoDB = async (blogData: TBlog) => {
   const blog = await Blog.create(blogData);
@@ -28,9 +30,19 @@ const updateBlogInDB = async (id: string, userId: string, payload: TBlog) => {
   return updatedBlog;
 };
 
-const getAllBlogsFromDB = async () => {
-  const blogs = await Blog.find();
-  return blogs;
+const getAllBlogsFromDB = async (query: Record<string, unknown>) => {
+  const blogQuery = new QueryBuilder(
+    Blog.find().populate('author', '-password'),
+    query
+  )
+    .search(blogSearchableFields)
+    .filter()
+    .sortBy()
+    .paginate()
+    .fields();
+
+  const result = await blogQuery.modelQuery;
+  return result;
 };
 
 const deleteBlogFromDB = async (id: string, userId: string) => {
