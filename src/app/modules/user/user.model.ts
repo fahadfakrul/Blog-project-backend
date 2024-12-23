@@ -24,9 +24,9 @@ const userSchema = new Schema<TUser, UserModel>(
 // pre save middleware/hook
 userSchema.pre('save', async function (next) {
   //hashing password
-  const user = this;
-  user.password = await bcrypt.hash(
-    user.password,
+
+  this.password = await bcrypt.hash(
+    this.password,
     Number(config.bcrypt_salt_rounds)
   );
   next();

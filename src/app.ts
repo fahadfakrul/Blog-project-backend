@@ -4,7 +4,7 @@ import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import notFound from './app/middlewares/notFound';
 import router from './app/routes';
 const app: Application = express();
-const port = 3000;
+// const port = 3000;
 
 //parsers
 app.use(express.json());
