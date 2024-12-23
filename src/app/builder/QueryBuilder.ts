@@ -39,11 +39,6 @@ class QueryBuilder<T> {
     ];
     excludeFields.forEach((field) => delete queryObj[field]);
 
-    // Add specific filtering for `author` if provided
-    if (queryObj.author) {
-      queryObj['author'] = queryObj.author;
-    }
-
     this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
     return this;
   }
