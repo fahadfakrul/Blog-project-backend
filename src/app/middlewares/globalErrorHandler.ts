@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
 import { TErrorSources } from '../interface/error';
@@ -7,7 +8,7 @@ import handleValidationError from '../errors/handleValidationError';
 import handleCastError from '../errors/handleCastError';
 import AppError from '../errors/AppError';
 
-const globalErrorHandler: ErrorRequestHandler = (err, req, res) => {
+const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // default error values
   let statusCode = 500;
   let message = 'internal server error';
